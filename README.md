@@ -1,10 +1,10 @@
-# **Bottle Dataset with Labeled Pallet Counts**
+# **Bottle Dataset with Labeled Pellet Counts**
 
 ## **Overview**
 
-This dataset contains images of small bottles labeled with the corresponding number of red, green, and blue pallets inside. The images were captured against a plain background to ensure consistency.
+This dataset contains images of small bottles labeled with the corresponding number of red, green, and blue pellets inside. The images were captured against a plain background to ensure consistency.
 
-Each image is associated with a label file containing the exact count of red, green, and blue pallets.
+Each image is associated with a label file containing the exact count of red, green, and blue pellets.
 
 ## **Dataset Structure**
 
@@ -21,15 +21,15 @@ Each JSON file in the labels/ folder contains:
 
 ```
 {
-  "red": <count>,   // Number of red pallets
-  "green": <count>, // Number of green pallets
-  "blue": <count>   // Number of blue pallets
+  "red": <count>,   // Number of red pellets
+  "green": <count>, // Number of green pellets
+  "blue": <count>   // Number of blue pellets
 }
 ```
 
 ### **Example Label**
 
-For an image of a bottle with 5 red, 3 green, and 8 blue pallets:
+For an image of a bottle with 5 red, 3 green, and 8 blue pellets:
 
 ```json
 {
