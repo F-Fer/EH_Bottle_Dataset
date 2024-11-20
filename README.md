@@ -21,9 +21,9 @@ Each JSON file in the labels/ folder contains:
 
 ```
 {
-  "red": <count>,   // Number of red pellets
-  "green": <count>, // Number of green pellets
-  "blue": <count>   // Number of blue pellets
+  "red_count": <count>,   // Number of red pellets
+  "green_count": <count>, // Number of green pellets
+  "blue_count": <count>   // Number of blue pellets
 }
 ```
 
@@ -33,9 +33,9 @@ For an image of a bottle with 5 red, 3 green, and 8 blue pellets:
 
 ```json
 {
-  "red": 5,
-  "green": 3,
-  "blue": 8
+  "red_count": 5,
+  "green_count": 3,
+  "blue_count": 8
 }
 ```
 
