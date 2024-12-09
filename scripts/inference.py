@@ -114,8 +114,8 @@ while True:
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     # Perform YOLO inference and draw bounding boxes
-    results = yolo_model.predict(source=frame_rgb, conf=0.5, verbose=False)
-    detections = results[0]
+    # results = yolo_model.predict(source=frame_rgb, conf=0.5, verbose=False)
+    # detections = results[0]
 
     try:
         predictions, bbox = run_inference_on_bottle(frame_rgb, keras_model=keras_model, yolo_model=yolo_model)
