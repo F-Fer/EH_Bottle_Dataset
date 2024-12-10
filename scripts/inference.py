@@ -6,34 +6,54 @@ from ultralytics import YOLO
 import matplotlib.pyplot as plt
 
 
-def extract_bottle_bottom(image, model, confidence_threshold=0.5, crop_ratio=0.6, target_size=(224, 224)):
-    # Perform YOLO inference
+def extract_bottle_bottom(image, model, confidence_threshold=0.5, crop_ratio=1.0, target_size=224):
+    # Perform inference
     results = model.predict(source=image, conf=confidence_threshold, verbose=False)
     detections = results[0]
 
-    # Skip if no detections are found
     if detections.boxes is None or len(detections.boxes) == 0:
-        print("No bottles detected.")
+        print(f"No bottles detected in image.")
         return None, None
 
     # Get bounding box of the first detected object
     box = detections.boxes[0].xyxy[0].cpu().numpy()  # [x_min, y_min, x_max, y_max]
     x_min, y_min, x_max, y_max = map(int, box)
 
-    # Calculate the bottom portion
-    bottle_height = y_max - y_min
-    bottom_y_min = y_max - int(bottle_height * crop_ratio)
+    # Calculate width and height of the bounding box
+    box_width = x_max - x_min
+    box_height = y_max - y_min
 
-    # Ensure the crop is within the image bounds
-    bottom_y_min = max(0, bottom_y_min)
+    # Calculate the center of the bounding box
+    center_x = x_min + box_width // 2
+    center_y = y_min + box_height // 2
 
-    # Crop the bottom portion
-    cropped_bottom = image[bottom_y_min:y_max, x_min:x_max]
+    # Calculate the side length of the square crop
+    crop_size = max(box_width, box_height, target_size)
 
-    # Resize to the target size
-    resized_cropped_bottom = cv2.resize(cropped_bottom, target_size, interpolation=cv2.INTER_AREA)
+    # Determine the square crop boundaries
+    crop_x_min = max(0, center_x - crop_size // 2)
+    crop_y_min = max(0, center_y - crop_size // 2)
+    crop_x_max = crop_x_min + crop_size
+    crop_y_max = crop_y_min + crop_size
 
-    return resized_cropped_bottom, (x_min, y_min, x_max, y_max)
+    # Adjust crop to ensure it fits within the image boundaries
+    if crop_x_max > image.shape[1]:
+        crop_x_min -= (crop_x_max - image.shape[1])
+        crop_x_max = image.shape[1]
+    if crop_y_max > image.shape[0]:
+        crop_y_min -= (crop_y_max - image.shape[0])
+        crop_y_max = image.shape[0]
+
+    # Ensure the adjustments keep the crop within valid bounds
+    crop_x_min = max(0, crop_x_min)
+    crop_y_min = max(0, crop_y_min)
+
+    # Perform cropping
+    cropped_bottle = image[crop_y_min:crop_y_max, crop_x_min:crop_x_max]
+
+    # Resize the cropped image to the target size (224x224)
+    resized_bottle = cv2.resize(cropped_bottle, (target_size, target_size), interpolation=cv2.INTER_AREA)
+    return resized_bottle, [x_min, y_min, x_max, y_max]
 
 
 def preprocess_image(image, add_batch_dim=True, target_size=(224, 224)):
@@ -61,7 +81,7 @@ def run_inference_on_bottle(image, keras_model, yolo_model):
 # Paths to models
 image_dir_path = "/Users/finnferchau/dev/EH_Bottle_Dataset/images"
 yolo_path = "/Users/finnferchau/dev/EH_Bottle_Dataset/models/yolo.pt"
-keras_path = "/Users/finnferchau/dev/EH_Bottle_Dataset/models/resnet50_model_v14.keras"
+keras_path = "/Users/finnferchau/dev/EH_Bottle_Dataset/models/resnet50_model_v21.keras"
 
 # Load models
 keras_model = tf.keras.models.load_model(keras_path)
@@ -78,33 +98,6 @@ if not cap.isOpened():
 print("Press 's' to take a picture and run inference, or 'q' to quit.")
 
 while True:
-    # # Capture frame-by-frame
-    # ret, frame = cap.read()
-    # if not ret:
-    #     print("Error: Unable to capture frame.")
-    #     break
-
-    # # Perform YOLO inference and draw bounding boxes
-    # results = yolo_model.predict(source=frame, conf=0.5, verbose=False)
-    # detections = results[0]
-
-    # if detections.boxes is not None and len(detections.boxes) > 0:
-    #     for box in detections.boxes:
-    #         # Extract bounding box coordinates
-    #         xyxy = box.xyxy[0].cpu().numpy()  # [x_min, y_min, x_max, y_max]
-    #         x_min, y_min, x_max, y_max = map(int, xyxy)
-
-    #         # Draw the bounding box on the frame
-    #         cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
-    #         label = f"Confidence: {box.conf[0]:.2f}"
-    #         cv2.putText(frame, label, (x_min, y_min - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-    # # Display the live video feed
-    # cv2.imshow('Webcam with Detections', frame)
-
-    # Wait for a key press
-    # key = cv2.waitKey(1) & 0xFF
-
     ret, frame = cap.read()
     key = cv2.waitKey(1) & 0xFF
     if not ret:
@@ -112,10 +105,6 @@ while True:
         break
 
     frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-    # Perform YOLO inference and draw bounding boxes
-    # results = yolo_model.predict(source=frame_rgb, conf=0.5, verbose=False)
-    # detections = results[0]
 
     try:
         predictions, bbox = run_inference_on_bottle(frame_rgb, keras_model=keras_model, yolo_model=yolo_model)
@@ -130,7 +119,7 @@ while True:
             cv2.imshow('Webcam with Detections', frame)
     except ValueError as e:
         print(str(e))
-    
+
     # Display the live video feed
     cv2.imshow('Webcam with Detections', frame)
 
