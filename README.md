@@ -2,9 +2,8 @@
 
 ## **Overview**
 
-This dataset contains images of small bottles labeled with the corresponding number of red, green, and blue pellets inside. The majority of the images were captured in frot of a white wall with white ground. However the dataset also include about 300 additional images in a veriety of environments.
+This dataset features images of small bottles containing red, green, and blue pellets, each labeled with the precise count of pellets for each color. Most images were taken against a white background (white wall and ground), ensuring consistent conditions. Additionally, the dataset includes approximately 300 images captured in diverse environments to enhance variability.
 
-Each image is associated with a label file containing the exact count of red, green, and blue pellets.
 
 ## **Dataset Structure**
 
@@ -20,12 +19,12 @@ The dataset is organized as follows:
 
 Each JSON file in the labels/ folder contains:
 
-```
+```json
 {
-  "image_id": <image file name>,
-  "red": <count>,   // Number of red pellets
-  "green": <count>, // Number of green pellets
-  "blue": <count>   // Number of blue pellets
+  "image_id": <image file name>,    // Name of the corresponding image file
+  "red": <count>,                   // Number of red pellets
+  "green": <count>,                 // Number of green pellets
+  "blue": <count>                   // Number of blue pellets
 }
 ```
 
@@ -44,7 +43,7 @@ For an image of a bottle with 5 red, 3 green, and 8 blue pellets:
 
 ## **Statistics**
 
-	•	Total Images: 2,967
-	•	Total Labels: 2,967
-	•	Bottle Variants: 125 variants
+- Total Images: 2,967
+- Total Labels: 2,967
+- Bottle Variants: 125 variants
 
