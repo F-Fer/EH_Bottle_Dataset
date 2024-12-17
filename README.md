@@ -19,7 +19,7 @@ The dataset is organized as follows:
 
 Each JSON file in the labels/ folder contains:
 
-```json
+```
 {
   "image_id": <image file name>,    // Name of the corresponding image file
   "red": <count>,                   // Number of red pellets
