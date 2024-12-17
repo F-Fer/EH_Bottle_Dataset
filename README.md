@@ -41,6 +41,24 @@ For an image of a bottle with 5 red, 3 green, and 8 blue pellets:
 }
 ```
 
+## **Setup**
+
+### **Environment**
+
+- Artificial lighting with the window blinds closed
+
+### **Camera Placement**
+
+- The bottle is placed **right in front of** the wall
+- The robot is placed **30cm** from the bottle
+- Both are place **perpendicular** to the wall
+
+
+<img src="IMG_7532.jpg" alt="IMG_7515" width="400">
+
+<img src="IMG_7533.jpg" alt="IMG_7517" width="400">
+
+
 ## **Statistics**
 
 - Total Images: 2,967

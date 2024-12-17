@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 models/
 .ipynb_checkpoints/
 logs/
 .DS_Store
 *.pt
 *.keras
+=======
+.DS_Store
+>>>>>>> main
